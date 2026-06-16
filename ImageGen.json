@@ -1,0 +1,112 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9b327878-e521-49f7-8494-80cf4d865b9b",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "prompt",
+              "stringValue": "Prompt for the image you want to generate."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "05e372ac-20d0-4307-9b38-0b35382076b2",
+      "name": "Edit Fields (Prompt)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        336,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer Your_HuggingFace_Token"
+            },
+            {
+              "name": "Accept",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"inputs\": \"{{ $json.prompt }}\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "7e8af483-8be6-4106-984b-fca4cf3e9913",
+      "name": "Hugging Face API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        560,
+        -128
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields (Prompt)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields (Prompt)": {
+      "main": [
+        [
+          {
+            "node": "Hugging Face API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "60ad7e2d-03d9-413d-b73f-699517498e21",
+  "meta": {
+    "instanceId": "fd0aae31796695b50f720f4f9017805f5cdedeaa3f547436d55254f2c3f69fa2"
+  },
+  "nodeGroups": [],
+  "id": "cJpIYzeuub7dayVM",
+  "tags": []
+}
